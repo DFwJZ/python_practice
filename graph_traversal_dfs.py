@@ -10,6 +10,7 @@ def has_access(graph: Dict[str, List[str]], user_role: str, target_resource: str
     :param target_resource: The resource we're checking access for
     :return: True if the user has access, False otherwise
     """
+
     visited: Set[str] = set()
 
     def dfs(current_role: str) -> bool:

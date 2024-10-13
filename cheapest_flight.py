@@ -7,32 +7,33 @@ class Solution:
     def __init__(self):
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    def findCheapestPrice(self, n: int, flights: list[list[int]], src: int, dst: int, k: int) -> int:
-        self.logger.info(f"Starting findCheapestPrice function from {src} to {dst}, with at most {k} stops")
+    def findCheapestPrice1(self, n: int, flights: list[list[int]], src: int, dst: int, k: int) -> int:
+        logger_name = f"{self.__class__.__name__}.{self.findCheapestPrice.__name__}"
+        method_logger = logging.getLogger(logger_name)
+        method_logger.setLevel(logging.INFO)
+
+        method_logger.debug(f"From source city: {src} to destination city: {dst} with at most {k} stop(s)")
         prices = [float("inf")] * n # create inf cost for flying to each city
 
-        prices[src] = 0 # at the start, the cost is 0
-        self.logger.debug(f"Initial prices: {prices}")
+        prices[src] = 0
+        method_logger.info(f"Initial prices: {prices}")
 
         try:
-            for i in range(k + 1): 
-                self.logger.debug(f"Iteration {i}")
+            for i in range(k + 1):
+                method_logger.info(f"Currently looking at {i} stop(s)")
                 temp_prices = prices.copy()
-
                 for start, end, price in flights:
                     if prices[start] != float("inf") and prices[start] + price < prices[end]:
                         temp_prices[end] = prices[start] + price
-                        self.logger.debug(f"Updated price for city {end}: {temp_prices[end]}")
 
                 prices = temp_prices
-                self.logger.info(f"Cheapest price found: {prices}")
+                method_logger.info(f"Prices mapping at {i} stop(s)")
 
-            result = prices[dst] if prices[dst] != float("inf") else -1
-            return result 
-        
+            return prices[dst] if prices[dst] != float("inf") else -1
         except Exception as e:
-            self.logger.exception(f"An error occured: {str(e)}")
-            return -1            
+            method_logger.exception(f"Error occurred: {str(e)}")
+            raise
+
 
 def main():
     n = 3
